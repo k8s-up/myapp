@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: myapp-deployment
-  namespace: default
   labels:
     app.kubernetes.io/name: myapp
     app.kubernetes.io/instance: myapp-deployment
