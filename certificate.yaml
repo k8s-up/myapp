@@ -1,0 +1,22 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: myapp-nginx-cert
+  namespace: default
+  labels:
+    app.kubernetes.io/name: myapp
+    app.kubernetes.io/instance: myapp-deployment
+    app.kubernetes.io/version: "stable"
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: myapp-system
+    app.kubernetes.io/managed-by: kubectl
+spec:
+  secretName: myapp-nginx-tls
+  commonName: myapp-service.default.svc.cluster.local
+  dnsNames:
+    - myapp-service.default.svc.cluster.local
+  issuerRef:
+    name: cluster-issuer
+    kind: ClusterIssuer
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  namespace: default
+  labels:
+    app.kubernetes.io/name: myapp
+    app.kubernetes.io/instance: myapp-deployment
+    app.kubernetes.io/version: "stable"
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: myapp-system
+    app.kubernetes.io/managed-by: kubectl
+  annotations:
+    kubernetes.io/change-cause: "Added TLS + Basic-auth, deployment with nginx:1.30.2"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: myapp
+      app.kubernetes.io/instance: myapp-deployment
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: myapp
+        app.kubernetes.io/instance: myapp-deployment
+        app.kubernetes.io/version: "stable"
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: myapp-system
+        app.kubernetes.io/managed-by: kubectl
+    spec:
+      containers:
+      - name: nginx
+        image: registry.w3pro.net/library/nginx:1.30.2
+        ports:
+        - containerPort: 443
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "64Mi"
+          limits:
+            cpu: "200m"
+            memory: "128Mi"
+        volumeMounts:
+        - name: nginx-tls
+          mountPath: /etc/nginx/certs
+          readOnly: true
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-tls
+        secret:
+          secretName: myapp-nginx-tls
+      - name: nginx-config
+        configMap:
+          name: myapp-nginx-config

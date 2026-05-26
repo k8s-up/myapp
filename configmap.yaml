@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-nginx-config
+  namespace: default
+  labels:
+    app.kubernetes.io/name: myapp
+    app.kubernetes.io/instance: myapp-deployment
+    app.kubernetes.io/version: "stable"
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: myapp-system
+    app.kubernetes.io/managed-by: kubectl
+data:
+  default.conf: |
+    server {
+        listen 443 ssl;
+        ssl_certificate     /etc/nginx/certs/tls.crt;
+        ssl_certificate_key /etc/nginx/certs/tls.key;
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+        }
+    }
